@@ -203,7 +203,7 @@ Resources:
   RedshiftRole:
     Type: AWS::IAM::Role
     Properties :
-      RoleName: RedshiftImmersionRole
+      RoleName: RedshiftRole
       AssumeRolePolicyDocument:
         Version : 2012-10-17
         Statement :
@@ -233,6 +233,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
         - arn:aws:iam::aws:policy/AmazonRedshiftFullAccess
+        - arn:aws:iam::aws:policy/SecretsManagerReadWrite
   RedshiftCluster:
     Type: AWS::Redshift::Cluster
     DependsOn:
@@ -256,6 +257,7 @@ Resources:
       ClusterSubnetGroupName:
         Ref: RedshiftClusterSubnetGroup
       PubliclyAccessible: 'true'
+      Encrypted: 'true'
       Port:
         Ref: PortNumber
       IamRoles:
@@ -341,7 +343,7 @@ Resources:
     Properties:
       MapPublicIpOnLaunch: true
       CidrBlock: 10.0.1.0/24
-      AvailabilityZone: !Select [3, !GetAZs ""]
+      AvailabilityZone: !Select [1, !GetAZs ""]
       VpcId:
         Ref: VPC
   SecurityGroup:
